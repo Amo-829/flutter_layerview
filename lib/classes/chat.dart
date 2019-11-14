@@ -1,0 +1,124 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class Chat extends StatefulWidget{
+
+  @override
+  _ChatState createState() {
+    return _ChatState();
+  }
+}
+
+class _ChatState extends State<Chat>{
+  final List<ChatMessage> _messages = <ChatMessage>[];//存放聊天记录的数组，数组类型为无状态控件ChatMessage
+  final TextEditingController _textEditingController = new TextEditingController();
+  bool _isSections = false;
+
+  void _handleSubmitted (String text) {
+    _textEditingController.clear();
+    ChatMessage message = new ChatMessage(text: text,);
+    setState(() {
+      _messages.insert(0, message);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('聊天对象',style: TextStyle(fontWeight: FontWeight.bold,),),
+      ),
+      body: Column(
+        children: <Widget>[
+          new Flexible(
+            child: ListView.builder(
+              padding: EdgeInsets.all(8.0),
+              reverse: true,//reverse使ListView从屏幕底部开始
+              itemBuilder: (_, int index) => _messages[index],
+              itemCount: _messages.length,//itemCount指定列表中的消息数
+            ),
+          ),
+          new Divider(height: 10.0,),
+          new Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+            ),
+            child: _buildTextComposer(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextComposer(){
+    return new Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: <Widget>[
+          new Flexible(
+            child: TextField(
+              controller: _textEditingController,
+              onChanged: (String text){
+                setState(() {
+                  _isSections = text.length>0;  //文本输入框中的字符串长度大于0则允许发送消息
+                });
+              },
+              onSubmitted: _handleSubmitted,
+              decoration: InputDecoration.collapsed(hintText: 'send'),
+            ),
+          ),
+          new Container(
+            margin: EdgeInsets.symmetric(horizontal: 4.0),
+            child: IconButton(
+              icon: Icon(Icons.send),
+              onPressed:_isSections ?()=> _handleSubmitted(_textEditingController.text):null,//当没有为onPressed绑定处理函数时，IconButton默认为禁用状态
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChatMessage extends StatelessWidget{
+
+  ChatMessage({this.text});
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,//消息在右边
+        children: <Widget>[
+          new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Container(
+                child: Row(
+                  children: <Widget>[
+                    new Container(
+                      child: Text(text),//消息内容
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 10.0,//头像与信息的距离
+          ),
+          new Container(
+            child:  CircleAvatar(
+              child: new Image.asset('psd/1.jpg'),
+            ),//显示头像
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
