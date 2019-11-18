@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Course.dart';
 import 'classes/Amo.dart';
 import 'classes/Denglu.dart';
 import 'classes/Mine.dart';
@@ -12,7 +13,7 @@ import 'classes/view.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           accentColor: Colors.black12,
         ),
-        home: View(),
+        home: Course(),
     );
   }
 }
